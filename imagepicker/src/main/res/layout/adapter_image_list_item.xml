@@ -32,8 +32,8 @@
         android:descendantFocusability="blocksDescendants"
         android:paddingBottom="24dp"
         android:paddingLeft="24dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingRight="2dp"
+        android:paddingTop="2dp">
 
         <com.rxxb.imagepicker.view.SuperCheckBox
             android:id="@+id/cb_check"
