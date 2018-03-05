@@ -33,16 +33,16 @@
         android:paddingBottom="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="10dp"
-        android:paddingTop="12dp">
+        android:paddingTop="10dp">
 
         <com.rxxb.imagepicker.view.SuperCheckBox
             android:id="@+id/cb_check"
             style="@style/SuperCheckboxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:clickable="false"
             android:duplicateParentState="true"
             android:enabled="false"
-            android:focusable="false" />
+            android:focusable="false"/>
     </FrameLayout>
 </FrameLayout>

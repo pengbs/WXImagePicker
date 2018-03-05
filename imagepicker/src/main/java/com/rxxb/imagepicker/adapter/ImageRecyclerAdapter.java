@@ -2,6 +2,7 @@ package com.rxxb.imagepicker.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -19,8 +20,10 @@ import com.rxxb.imagepicker.ui.ImageBaseActivity;
 import com.rxxb.imagepicker.ui.ImageGridActivity;
 import com.rxxb.imagepicker.util.Utils;
 import com.rxxb.imagepicker.view.SuperCheckBox;
+import com.rxxb.imagepicker.view.TextDrawable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 加载相册图片的RecyclerView适配器
@@ -49,6 +52,8 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     private int mImageSize;               //每个条目的大小
     private LayoutInflater mInflater;
     private OnImageItemClickListener listener;   //图片被点击的监听
+    private TextDrawable.IBuilder mDrawableBuilder;
+    private List<Integer> alreadyChecked;
 
     public void setOnImageItemClickListener(OnImageItemClickListener listener) {
         this.listener = listener;
@@ -64,6 +69,29 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void refreshCheckedData(int position) {
+        List<Integer> checked = new ArrayList<>(imagePicker.getSelectLimit());
+        if (alreadyChecked != null) {
+            checked.addAll(alreadyChecked);
+        }
+        String payload = "add";
+        if (!checked.contains(position)) {
+            //选中新的
+            checked.add(position);
+        } else {
+            payload = "remove";
+        }
+        if (checked.size() == imagePicker.getSelectLimit()) {
+            notifyItemRangeChanged(isShowCamera ? 1 : 0, images.size(), payload);
+        } else {
+            if (!checked.isEmpty()) {
+                for (Integer check : checked) {
+                    notifyItemChanged(check, payload);
+                }
+            }
+        }
+    }
+
     /**
      * 构造方法
      */
@@ -77,6 +105,12 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         isShowCamera = imagePicker.isShowCamera();
         mSelectedImages = imagePicker.getSelectedImages();
         mInflater = LayoutInflater.from(activity);
+        mDrawableBuilder = TextDrawable.builder()
+                .beginConfig()
+                .width(Utils.dp2px(activity, 18))
+                .height(Utils.dp2px(activity, 18))
+                .endConfig().roundRect(Utils.dp2px(activity, 3));
+        alreadyChecked = new ArrayList<>(imagePicker.getSelectLimit());
     }
 
     @Override
@@ -93,6 +127,38 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             ((CameraViewHolder)holder).bindCamera();
         }else if (holder instanceof ImageViewHolder){
             ((ImageViewHolder)holder).bind(position);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+        if (holder instanceof CameraViewHolder){
+            ((CameraViewHolder)holder).bindCamera();
+        }else if (holder instanceof ImageViewHolder){
+            ImageViewHolder viewHolder = (ImageViewHolder) holder;
+            if (payloads == null || payloads.isEmpty()) {
+                viewHolder.bind(position);
+            } else {
+                final ImageItem imageItem = getItem(position);
+                int index = mSelectedImages.indexOf(imageItem);
+                if (index >= 0) {
+                    if (!alreadyChecked.contains(position)) {
+                        alreadyChecked.add(position);
+                    }
+                    viewHolder.cbCheck.setChecked(true);
+                    viewHolder.cbCheck.setButtonDrawable(mDrawableBuilder.build(String.valueOf(index+1), Color.parseColor("#1AAD19")));
+                } else {
+                    alreadyChecked.remove((Integer)position);
+                    viewHolder.cbCheck.setChecked(false);
+                    viewHolder.cbCheck.setButtonDrawable(R.mipmap.checkbox_normal);
+                }
+                int selectLimit = imagePicker.getSelectLimit();
+                if (mSelectedImages.size() >= selectLimit) {
+                    viewHolder.mask.setVisibility(index < 0 ? View.VISIBLE : View.GONE);
+                } else {
+                    viewHolder.mask.setVisibility(View.GONE);
+                }
+            }
         }
     }
 
@@ -129,7 +195,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         View checkView;
         SuperCheckBox cbCheck;
 
-
         ImageViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
@@ -156,30 +221,42 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
                         Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         cbCheck.setChecked(false);
-                        mask.setVisibility(View.GONE);
+                        //mask.setVisibility(View.GONE);
                     } else {
                         imagePicker.addSelectedImageItem(position, imageItem, cbCheck.isChecked());
-                        mask.setVisibility(View.VISIBLE);
+                        //mask.setVisibility(View.VISIBLE);
                     }
                 }
             });
             //根据是否多选，显示或隐藏checkbox
             if (imagePicker.isMultiMode()) {
                 cbCheck.setVisibility(View.VISIBLE);
-                boolean checked = mSelectedImages.contains(imageItem);
-                if (checked) {
-                    mask.setVisibility(View.VISIBLE);
+                int index = mSelectedImages.indexOf(imageItem);
+                if (index >= 0) {
+                    if (!alreadyChecked.contains(position)) {
+                        alreadyChecked.add(position);
+                    }
+                    //mask.setVisibility(View.VISIBLE);
                     cbCheck.setChecked(true);
+                    cbCheck.setButtonDrawable(mDrawableBuilder.build(String.valueOf(index+1), Color.parseColor("#1AAD19")));
+                } else {
+                    alreadyChecked.remove((Integer)position);
+                    //mask.setVisibility(View.GONE);
+                    cbCheck.setChecked(false);
+                    cbCheck.setButtonDrawable(R.mipmap.checkbox_normal);
+                }
+                int selectLimit = imagePicker.getSelectLimit();
+                if (mSelectedImages.size() >= selectLimit) {
+                    mask.setVisibility(index < 0 ? View.VISIBLE : View.GONE);
                 } else {
                     mask.setVisibility(View.GONE);
-                    cbCheck.setChecked(false);
                 }
             } else {
                 cbCheck.setVisibility(View.GONE);
+                alreadyChecked.clear();
             }
             imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
         }
-
     }
 
     private class CameraViewHolder extends ViewHolder{

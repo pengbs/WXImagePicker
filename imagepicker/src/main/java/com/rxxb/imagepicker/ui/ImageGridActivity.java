@@ -111,7 +111,6 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
-
         mCbOrigin = (SuperCheckBox) findViewById(R.id.cb_origin);
         mCbOrigin.setOnCheckedChangeListener(this);
         mCbOrigin.setChecked(imagePicker.isOrigin());
@@ -321,7 +320,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 //        mRecyclerAdapter.notifyItemChanged(position + (imagePicker.isShowCamera() ? 1 : 0));// 17/4/24  fix the position while click right bottom preview button
         for (int i = imagePicker.isShowCamera() ? 1 : 0; i < mRecyclerAdapter.getItemCount(); i++) {
             if (mRecyclerAdapter.getItem(i).path != null && mRecyclerAdapter.getItem(i).path.equals(item.path)) {
-                mRecyclerAdapter.notifyItemChanged(i);
+                //mRecyclerAdapter.notifyItemChanged(i);
+                mRecyclerAdapter.refreshCheckedData(i);
                 return;
             }
         }
@@ -396,7 +396,6 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             } else if (directPhoto) {
               finish();
             }
-
         }
     }
 

@@ -57,7 +57,12 @@ public class CropActivity extends ImageBaseActivity implements View.OnClickListe
         if (imagePicker.getStyle() == CropImageView.Style.CIRCLE) {
             cropView.configureOverlay().setCropShape(new CropIwaOvalShape(cropView.configureOverlay())).apply();
         }
-        File cropCacheFolder = new File(Environment.getExternalStorageDirectory()+"/ImagePicker/");
+        File cropCacheFolder;
+        if (imagePicker.getCutType() == 2) {
+            cropCacheFolder = new File(Environment.getExternalStorageDirectory() + "/RXImagePicker/");
+        } else {
+            cropCacheFolder = imagePicker.getCropCacheFolder(this);
+        }
         if (!cropCacheFolder.exists() || !cropCacheFolder.isDirectory()) {
             cropCacheFolder.mkdirs();
         }

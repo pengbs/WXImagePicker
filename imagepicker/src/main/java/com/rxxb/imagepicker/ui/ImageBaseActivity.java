@@ -86,7 +86,7 @@ public class ImageBaseActivity extends AppCompatActivity {
         } else {
             mBtnOk.setBackgroundDrawable(btnOkDrawable);
         }
-        mBtnOk.setPadding(Utils.dp2px(this, 16), 0, Utils.dp2px(this, 16), 0);
+        mBtnOk.setPadding(Utils.dp2px(this, 12), 0, Utils.dp2px(this, 12), 0);
         mBtnOk.setTextColor(Color.parseColor(imagePicker.getViewColor().getBarItemTextColor()));
     }
 }

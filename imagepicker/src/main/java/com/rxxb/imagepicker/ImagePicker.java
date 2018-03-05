@@ -60,6 +60,7 @@ public class ImagePicker {
     public static final String EXTRA_FROM_ITEMS = "extra_from_items";
     public static final String EXTRA_OUT_URI = "extra_out_uri";
 
+    private int cutType = 2;
     private boolean isOrigin = false;
     private boolean multiMode = true;    //图片选择模式
     private int selectLimit = 9;         //最大选择图片数量
@@ -100,6 +101,14 @@ public class ImagePicker {
             }
         }
         return mInstance;
+    }
+
+    public int getCutType() {
+        return cutType;
+    }
+
+    public void setCutType(int cutType) {
+        this.cutType = cutType;
     }
 
     public boolean isMultiMode() {
@@ -215,7 +224,7 @@ public class ImagePicker {
 
     public File getCropCacheFolder(Context context) {
         if (cropCacheFolder == null) {
-            cropCacheFolder = new File(context.getCacheDir() + "/ImagePicker/cropTemp/");
+            cropCacheFolder = new File(context.getCacheDir() + "/RXImagePicker/cropTemp/");
         }
         return cropCacheFolder;
     }

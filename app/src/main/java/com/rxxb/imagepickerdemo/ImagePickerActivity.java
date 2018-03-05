@@ -167,6 +167,7 @@ public class ImagePickerActivity extends AppCompatActivity implements SeekBar.On
                 startActivityForResult(intent, 100);
                 break;
             case R.id.btn_type0://圆形单选
+                imagePicker.setCutType(0);
                 imagePicker.setAspectRatio(new AspectRatio(1, 1));
                 imagePicker.setStyle(CropImageView.Style.CIRCLE);
                 imagePicker.setMultiMode(false);
@@ -174,6 +175,7 @@ public class ImagePickerActivity extends AppCompatActivity implements SeekBar.On
                 startActivityForResult(new Intent(this, ImageGridActivity.class), 100);
                 break;
             case R.id.btn_type1://矩形单选
+                imagePicker.setCutType(1);
                 imagePicker.setAspectRatio(new AspectRatio(1, 1));
                 imagePicker.setStyle(CropImageView.Style.RECTANGLE);
                 imagePicker.setMultiMode(false);
@@ -181,6 +183,7 @@ public class ImagePickerActivity extends AppCompatActivity implements SeekBar.On
                 startActivityForResult(new Intent(this, ImageGridActivity.class), 100);
                 break;
             case R.id.btn_type1_mu://矩形多选
+                imagePicker.setCutType(1);
                 imagePicker.setAspectRatio(new AspectRatio(1, 1));
                 imagePicker.setStyle(CropImageView.Style.RECTANGLE);
                 imagePicker.setMultiMode(true);
@@ -188,6 +191,7 @@ public class ImagePickerActivity extends AppCompatActivity implements SeekBar.On
                 startActivityForResult(new Intent(this, ImageGridActivity.class), 100);
                 break;
             case R.id.btn_type2://矩形任意比例多选
+                imagePicker.setCutType(2);
                 imagePicker.setStyle(CropImageView.Style.RECTANGLE);
                 imagePicker.setDynamicCrop(true);
                 imagePicker.setMultiMode(true);
