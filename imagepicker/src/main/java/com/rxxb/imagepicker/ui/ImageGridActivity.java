@@ -57,6 +57,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
     public static final String EXTRAS_TAKE_PICKERS = "TAKE";
     public static final String EXTRAS_IMAGES = "IMAGES";
+    public static final int SPAN_COUNT = 4;
 
     private ImagePicker imagePicker;
 
@@ -253,8 +254,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         }
 //        mImageGridAdapter.setOnImageItemClickListener(this);
         mRecyclerAdapter.setOnImageItemClickListener(this);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, Utils.dp2px(this, 2), false));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(SPAN_COUNT, Utils.dp2px(this, 2), false));
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mImageFolderAdapter.refreshData(imageFolders);
     }

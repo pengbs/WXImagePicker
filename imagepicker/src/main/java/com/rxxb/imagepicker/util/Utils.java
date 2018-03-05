@@ -12,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 
+import com.rxxb.imagepicker.ui.ImageGridActivity;
+
 /**
  * ================================================
  * 作    者：jeasonlzy（廖子尧 Github地址：https://github.com/jeasonlzy0216
@@ -41,7 +43,8 @@ public class Utils {
     public static int getImageItemWidth(Activity activity) {
         int screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
         int densityDpi = activity.getResources().getDisplayMetrics().densityDpi;
-        int cols = screenWidth / densityDpi;
+        //int cols = screenWidth / densityDpi;
+        int cols = ImageGridActivity.SPAN_COUNT;
         cols = cols < 3 ? 3 : cols;
         int columnSpace = (int) (2 * activity.getResources().getDisplayMetrics().density);
         return (screenWidth - columnSpace * (cols - 1)) / cols;
