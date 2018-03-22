@@ -2,6 +2,8 @@ package com.rxxb.imagepicker.ui;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -10,7 +12,9 @@ import com.rxxb.imagepicker.DataHolder;
 import com.rxxb.imagepicker.ImagePicker;
 import com.rxxb.imagepicker.R;
 import com.rxxb.imagepicker.adapter.ImagePageAdapter;
+import com.rxxb.imagepicker.adapter.ImageThumbPreviewAdapter;
 import com.rxxb.imagepicker.bean.ImageItem;
+import com.rxxb.imagepicker.util.SpaceItemDecoration;
 import com.rxxb.imagepicker.util.Utils;
 import com.rxxb.imagepicker.view.ViewPagerFixed;
 
@@ -36,6 +40,8 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     protected View topBar;
     protected ViewPagerFixed mViewPager;
     protected ImagePageAdapter mAdapter;
+    protected RecyclerView mRvPreview;
+    protected ImageThumbPreviewAdapter thumbPreviewAdapter;
     protected boolean isFromItems = false;
 
     @Override
@@ -89,6 +95,22 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
         //初始化当前页面的状态
         mTitleCount.setText(getString(R.string.ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+
+        mRvPreview = (RecyclerView) findViewById(R.id.rv_preview);
+        mRvPreview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        mRvPreview.addItemDecoration(new SpaceItemDecoration(Utils.dp2px(this, 6)));
+        thumbPreviewAdapter = new ImageThumbPreviewAdapter(this);
+        mRvPreview.setAdapter(thumbPreviewAdapter);
+        thumbPreviewAdapter.setOnThumbItemClickListener(new ImageThumbPreviewAdapter.OnThumbItemClickListener() {
+            @Override
+            public void onThumbItemClick(ImageItem imageItem) {
+                int position = mImageItems.indexOf(imageItem);
+                if (position != -1 && mCurrentPosition != position) {
+                    mCurrentPosition = position;
+                    mViewPager.setCurrentItem(mCurrentPosition, false);
+                }
+            }
+        });
     }
 
     /** 单击时，隐藏头和尾 */

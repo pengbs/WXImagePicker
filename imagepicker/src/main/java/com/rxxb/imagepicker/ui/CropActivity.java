@@ -28,6 +28,7 @@ public class CropActivity extends ImageBaseActivity implements View.OnClickListe
     private CropIwaView cropView;
     private ProgressDialog mProgressDialog;
     private String dstPath;
+    private float originAngle;
 
     public static Intent callingIntent(Context context, Uri imageUri) {
         Intent intent = new Intent(context, CropActivity.class);
@@ -42,6 +43,7 @@ public class CropActivity extends ImageBaseActivity implements View.OnClickListe
 
         //初始化View
         findViewById(R.id.tv_rotate).setOnClickListener(this);
+        findViewById(R.id.tv_recover).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
         Button mBtnOk = (Button) findViewById(R.id.btn_ok);
         mBtnOk.setText(getString(R.string.ip_complete));
@@ -85,7 +87,7 @@ public class CropActivity extends ImageBaseActivity implements View.OnClickListe
                 dismiss();
             }
         });
-
+        originAngle = cropView.getMatrixAngle();
         setConfirmButtonBg(mBtnOk);
         findViewById(R.id.top_bar).setBackgroundColor(Color.parseColor(imagePicker.getViewColor().getNaviBgColor()));
         ((TextView)findViewById(R.id.tv_des)).setTextColor(Color.parseColor(imagePicker.getViewColor().getNaviTitleColor()));
@@ -105,6 +107,12 @@ public class CropActivity extends ImageBaseActivity implements View.OnClickListe
             finish();
         } else if(id == R.id.tv_rotate){
             cropView.rotateImage(90);
+        } else if(id == R.id.tv_recover){
+            float currentAngle = cropView.getMatrixAngle();
+            if (originAngle != currentAngle) {
+                cropView.rotateImage(originAngle - currentAngle);
+            }
+            cropView.initialize();
         } else if (id == R.id.btn_ok) {
             if (mProgressDialog == null) {
                 mProgressDialog = new ProgressDialog(this);

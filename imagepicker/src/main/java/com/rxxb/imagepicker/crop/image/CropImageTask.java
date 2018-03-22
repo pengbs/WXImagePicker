@@ -48,7 +48,7 @@ class CropImageTask extends AsyncTask<Void, Void, Throwable> {
             if (bitmap == null) {
                 return new NullPointerException("Failed to load bitmap");
             }
-            if (mCurrentAngle > 0) {
+            if (mCurrentAngle != 0) {
                 Matrix tempMatrix = new Matrix();
                 tempMatrix.setRotate(mCurrentAngle, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
                 Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),

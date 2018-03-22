@@ -116,7 +116,10 @@ public class CropIwaView extends FrameLayout {
             gestureDetector.onDown(ev);
             return false;
         }
-        if (overlayView.isResizing() || overlayView.isDraggingCropArea()) {
+        /*if (overlayView.isResizing() || overlayView.isDraggingCropArea()) {
+            return false;
+        }*/
+        if (overlayView.isResizing()) {
             return false;
         }
         return true;
@@ -162,6 +165,15 @@ public class CropIwaView extends FrameLayout {
     public void rotateImage(float deltaAngle){
         imageView.rotateImage(deltaAngle, overlayView.getCropRect().centerX(), overlayView.getCropRect().centerY());
     }
+
+    public float getMatrixAngle() {
+        return imageView.getMatrixAngle();
+    }
+
+    public void initialize() {
+        imageView.initialize();
+    }
+
     public CropIwaImageViewConfig configureImage() {
         return imageConfig;
     }

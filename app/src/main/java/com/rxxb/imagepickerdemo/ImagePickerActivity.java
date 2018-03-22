@@ -195,7 +195,9 @@ public class ImagePickerActivity extends AppCompatActivity implements SeekBar.On
                 imagePicker.setStyle(CropImageView.Style.RECTANGLE);
                 imagePicker.setDynamicCrop(true);
                 imagePicker.setMultiMode(true);
-                startActivityForResult(new Intent(this, ImageGridActivity.class), 100);
+                Intent intentType2 = new Intent(this, ImageGridActivity.class);
+                //intentType2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true);
+                startActivityForResult(intentType2, 100);
                 break;
             case R.id.btn_wxDemo:
                 startActivityForResult(new Intent(this, ImageGridActivity.class), 100);

@@ -64,6 +64,12 @@ class CropIwaImageView extends AppCompatImageView implements OnNewBoundsListener
         }
     }
 
+    @SuppressLint("Range")
+    public void initialize() {
+        config.setScale(CropIwaImageViewConfig.SCALE_UNSPECIFIED);
+        placeImageToInitialPosition();
+    }
+
     private void placeImageToInitialPosition() {
         updateImageBounds();
         moveImageToTheCenter();
@@ -273,7 +279,6 @@ class CropIwaImageView extends AppCompatImageView implements OnNewBoundsListener
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            System.out.println("onScale.....");
             float scaleFactor = detector.getScaleFactor();
             float newScale = matrixUtils.getScaleX(imageMatrix) * scaleFactor;
             if (isValidScale(newScale)) {

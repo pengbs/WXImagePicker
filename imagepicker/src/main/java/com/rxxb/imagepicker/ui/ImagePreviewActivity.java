@@ -78,6 +78,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
                 boolean isSelected = imagePicker.isSelect(item);
                 mCbCheck.setChecked(isSelected);
                 mTitleCount.setText(getString(R.string.ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+                thumbPreviewAdapter.setSelected(item);
             }
         });
         //当点击当前选中按钮的时候，需要根据当前的选中状态添加和移除图片
@@ -90,6 +91,14 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
                     Toast.makeText(ImagePreviewActivity.this, getString(R.string.ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                     mCbCheck.setChecked(false);
                 } else {
+                    int changPosition = imagePicker.getSelectImageCount();
+                    if (!mCbCheck.isChecked()) {
+                        //取消选中
+                        changPosition = imagePicker.getSelectedImages().indexOf(imageItem);
+                        thumbPreviewAdapter.notifyItemRemoved(changPosition);
+                    } else {
+                        thumbPreviewAdapter.notifyItemInserted(changPosition);
+                    }
                     imagePicker.addSelectedImageItem(mCurrentPosition, imageItem, mCbCheck.isChecked());
                 }
             }
@@ -126,6 +135,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
                 });
 
         topBar.setBackgroundColor(Color.parseColor(imagePicker.getViewColor().getNaviBgColor()));
+        bottomBar.setBackgroundColor(Color.parseColor(imagePicker.getViewColor().getToolbarBgColor()));
         mTitleCount.setTextColor(Color.parseColor(imagePicker.getViewColor().getNaviTitleColor()));
         tvPreviewEdit.setTextColor(Color.parseColor(imagePicker.getViewColor().getToolbarTitleColorNormal()));
         mCbOrigin.setTextColor(Color.parseColor(imagePicker.getViewColor().getToolbarTitleColorNormal()));
@@ -143,7 +153,9 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
         } else {
             mBtnOk.setText(getString(R.string.ip_complete));
         }
-
+        if (isAdd) {
+            thumbPreviewAdapter.setSelected(item);
+        }
         /*if (mCbOrigin.isChecked()) {
             long size = 0;
             for (ImageItem imageItem : selectedImages)
